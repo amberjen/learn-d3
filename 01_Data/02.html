@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="../d3.js"></script>
+    <title>D3 Page Template</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      let dataset = [5, 10, 15, 20, 25];
+
+      // When chain methods together, anytime after call data(), you can create
+      // an anonymous function that accepts 'd' as input, data() ensures that 'd'
+      // is set to the corresponding value in original datatset
+
+
+      d3.select('body')
+          .selectAll('p')
+          .data(dataset)
+          .enter()
+          .append('p')
+          // .text('New Paragraph!');
+          .text( d => 'I can count up to ' + d)
+          .style('color', d => {
+            if(d > 15) {
+              return '#f15a28'
+            } else {
+              return '#313439';
+            }
+          });
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="../d3.js"></script>
+    <title>D3 Page Template</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Chain syntax
+      d3.select('body').append('h1').text('hello world!')
+
+      let dataset;
+
+      // Specify how the values in each row of csv should be typed
+      let rowConverter = d => {
+        return {
+          Food: d.Food, // String, no conversion
+          Deliciousness: parseFloat(d.Deliciousness) // Parse a string, return a floating point number
+        }
+      }
+
+
+      d3.csv('food.csv', rowConverter, (error, data) => {
+        if(error) {
+          console.log(error);
+        } else {
+          console.log(data);
+
+          // Hand csv data off to global variable, so it's accessible later
+          dataset = data;
+
+          // Call some other functions that generate your visualization, e.g.:
+          // generateVis()
+          // hideLoadingMsg()
+          // makeAwesomeCharts()
+
+
+        }
+        // console.log(JSON.stringify(data, null, 2));
+      })
+    </script>
+
+  </body>
+</html>
