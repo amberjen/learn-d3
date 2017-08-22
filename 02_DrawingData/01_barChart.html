@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="../d3.js"></script>
+    <style>
+      .bar {
+        display: inline-block;
+        width: 25px;
+        background: teal;
+        margin-right: 4px;
+      }
+    </style>
+    <title>D3 Page Template</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Bar chart: one-dimensional sets of numbers
+
+      // let dataset = [ 5, 10, 15, 20, 25 ];
+      // let dataset = [ 1, 99, 21, 33, 19, 99, 10 , 18, 7 ,67];
+
+
+      // Generate random data
+      let dataset = [];
+      for( let i=0; i<15; i++) {              // Loop 15 times
+        // let newNumber = Math.random() * 30;
+        let newNumber = Math.floor(Math.random() * 30);
+        dataset.push(newNumber);
+      }
+
+
+      // bar chart
+      d3.select('body')
+          .selectAll('div')
+          .data(dataset)
+          .enter()
+          .append('div')
+          .attr('class', 'bar')
+          .style('height', d => {
+            let barHeight = d * 5; // Scale up by factor of 5
+            return barHeight + 'px';
+          });
+
+    </script>
+
+  </body>
+</html>
