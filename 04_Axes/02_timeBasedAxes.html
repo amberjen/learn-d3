@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="../d3.js"></script>
+    <style>
+      /* Styling axis, override D3 default style */
+      .axis path,
+      .axis line {
+        stroke: #313439;
+        shape-rendering: crispEdges; /* Clean up visual artifacts from antialiasing, i.e. no blurry axes */
+      }
+
+      .axis text {
+        font-family: Futura, sans-serif;
+        font-size: .625rem;
+        fill: #313439;
+      }
+    </style>
+    <title>D3 Page Template</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Base code: learn-d3/03_Scales/03_timeScale.html
+      // JavaScript and D3 can only perform time and date calculations on Date objects, not on strings
+      // Work with dates in D3 involves:
+      // 1. Converting strings to Date objects
+      // 2. Using time scales, as needed
+      // 3. Formatting Date objects as human-friendly strings (for display to the user)
+
+      let dataset;
+      let xScale;
+      let yScale;
+      let xAxis;
+      let yAxis;
+
+      let w = 800;
+      let h = 400;
+      let padding = 40;
+
+      // Converting strings to Dates
+      let parseTime = d3.timeParse('%m/%d/%y'); // format: mm/dd/yy
+
+      // Converting Dates to strings
+      let formatTime = d3.timeFormat('%e'); // %e => 1, 2, 3...30 or 31
+
+      // Function for converting csv values from strings to Dates and numbers
+      let rowConverter = d => {
+        return {
+          Date: parseTime(d.Date),
+          Amount: parseInt(d.Amount)
+        };
+      }
+
+      d3.csv('time_scale_data.csv', rowConverter, (error, data) => {
+        if(error) {
+          console.log(error);
+        }
+
+        // Copy data into global dataset
+        dataset = data;
+
+        let startDate = d3.min(dataset, d => d.Date);
+        let endDate = d3.max(dataset, d => d.Date);
+
+
+        // Define time scales
+        xScale = d3.scaleTime()
+                    .domain(
+                      [ d3.timeDay.offset(startDate, -1), // -1 for padding
+                        d3.timeDay.offset(endDate, 1)]) // +1 for padding
+                    .range([padding, w - padding]);
+        yScale = d3.scaleLinear()
+                    .domain([d3.min(dataset, d => d.Amount), d3.max(dataset, d => d.Amount)])
+                    .range([h - padding, padding]);
+
+
+        // Create svg element
+        let svg = d3.select('body')
+                      .append('svg')
+                      .attr('width', w)
+                      .attr('height', h);
+
+
+        // Generate guide lines
+        svg.selectAll('line')
+            .data(dataset)
+            .enter()
+            .append('line')
+            .attr('x1', d => xScale(d.Date) )
+            .attr('x2', d => xScale(d.Date) )
+            .attr('y1', h - padding )
+            .attr('y2', d => yScale(d.Amount) )
+            .attr('stroke', '#e0e1e2')
+            .attr('stroke-width', 1);
+
+
+        // Generate circles last, so they appear in front
+        svg.selectAll('circle')
+            .data(dataset)
+            .enter()
+            .append('circle')
+            .attr('cx', d => xScale(d.Date))
+            .attr('cy', d => yScale(d.Amount))
+            .attr('r', 2);
+
+
+        // Setting up axis
+        xAxis = d3.axisBottom()
+                  .scale(xScale)
+                  .ticks(9)
+                  .tickFormat(formatTime);
+        yAxis = d3.axisLeft()
+                  .scale(yScale)
+                  .ticks(10);
+
+
+        // Generate axis
+        svg.append('g')
+            .attr('class', 'axis')
+            .attr('transform', 'translate(0,' + (h - padding) + ')')
+            .call(xAxis);
+
+        svg.append('g')
+            .attr('class', 'axis')
+            .attr('transform', 'translate(' + padding + ',0)')
+            .call(yAxis);
+
+      });
+
+    </script>
+
+  </body>
+</html>
