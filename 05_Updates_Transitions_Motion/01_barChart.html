@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script type="text/javascript" src="../d3.js"></script>
+    <style>
+    </style>
+    <title>D3 Page Template</title>
+  </head>
+  <body>
+    <script type="text/javascript">
+      // Bar chart: one-dimensional sets of numbers
+
+      let w = 500;
+      let h = 200;
+      let barPadding = 1;
+
+      let dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13, 11, 12, 15, 20, 18,
+                     17, 16, 18, 23, 25 ];
+
+      // Create SVG element
+      let svg = d3.select('body')
+                  .append('svg')
+                  .attr('height', h)
+                  .attr('width', w);
+
+      svg.selectAll('rect')
+          .data(dataset)
+          .enter()
+          .append('rect')
+          .attr('x', (d, i) => i * (w/dataset.length))
+          .attr('y', d => h - (d * 4))
+          .attr('width', (w / dataset.length) - barPadding)
+          .attr('height', d => d * 4)
+          .attr('fill', d => 'rgba(10, 10, 10,' + Math.round(d * 0.2)/10 + ')');
+
+      // Labels
+			svg.selectAll('text')
+					.data(dataset)
+					.enter()
+					.append('text')
+          .text(d => d)
+          .attr('text-anchor', 'middle')
+          .attr('x', (d, i) => i * (w / dataset.length) + (w / dataset.length - barPadding) / 2)
+          .attr('y', d => h - (d * 4) + 14)
+          .attr('font-family', 'Futura')
+          .attr('font-size', '.725rem')
+          .attr('fill', '#313439');
+    </script>
+
+  </body>
+</html>
